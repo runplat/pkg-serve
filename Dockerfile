@@ -1,0 +1,2 @@
+FROM alexeiled/nsenter
+CMD ['']
