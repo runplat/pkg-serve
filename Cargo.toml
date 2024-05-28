@@ -1,6 +1,20 @@
 [package]
-name = "pkg"
-version = "0.1.0"
+name = "pkg-serve"
+authors = ["juliusl@microsoft.com"]
+description = "Serves packages from a blob container by manifest"
+version = "0.0.1"
 edition = "2021"
 
 [dependencies]
+anyhow = "1.0.86"
+async-stream = "0.3.5"
+azure_core = "0.20.0"
+azure_identity = "0.20.0"
+azure_storage = "0.20.0"
+azure_storage_blobs = "0.20.0"
+bytes = "1.6.0"
+futures-lite = "2.3.0"
+futures-util = "0.3.30"
+poem = "3.0.1"
+tokio = { version = "1.37.0", features = ["full"] }
+toml = "0.8.13"
