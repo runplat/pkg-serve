@@ -48,7 +48,7 @@ done
 port=$(cat .pkg-serve/run)
 
 echo "Executing nsenter, pkg-sever listening on $port"
-nsenter -t 1 -m -- PKG_SERVE_RUN_PORT="${port}" "${ACTION_FILE}"
+nsenter -t 1 -m -- PKG_SERVE_RUN_PORT="${port}" bash "${ACTION_FILE}"
 RESULT="${PIPESTATUS[0]}"
 
 if [ "$RESULT" -eq 0 ]; then
