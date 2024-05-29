@@ -17,6 +17,14 @@ if [[ ! -f "$ACTION_FILE" ]]; then
     exit 1
 fi
 
+if [[ -z "${2}" ]]; then
+    echo "Must provide a storage account name as the second argument"
+    exit 1
+fi
+
+echo "Starting package server"
+STORAGE_ACCOUNT_NAME="${2}" ./pkg-serve &
+
 echo "Cleaning up stale actions"
 
 rm -rf /mnt/actions/*
@@ -25,8 +33,6 @@ echo "Copying fresh actions"
 
 cp -R /opt/actions/. /mnt/actions
 
-echo "Starting package server"
-./pkg-serve &
 
 loops=0
 while ! test -f ".pkg-serve/run"; do
@@ -42,7 +48,7 @@ done
 port=$(cat .pkg-serve/run)
 
 echo "Executing nsenter, pkg-sever listening on $port"
-nsenter -t 1 -m -- STORAGE_ACCOUNT_NAME="${STORAGE_ACCOUNT_NAME}" PKG_SERVE_RUN_PORT="${port}" "${ACTION_FILE}"
+nsenter -t 1 -m -- PKG_SERVE_RUN_PORT="${port}" "${ACTION_FILE}"
 RESULT="${PIPESTATUS[0]}"
 
 if [ "$RESULT" -eq 0 ]; then
