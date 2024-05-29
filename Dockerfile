@@ -1,6 +1,7 @@
 FROM mcr.microsoft.com/cbl-mariner/base/rust:1.72 as build
 COPY . $PWD
-RUN rustup update stable
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+RUN rustup update
 RUN cargo build --release
 
 FROM mcr.microsoft.com/cbl-mariner/base/core:2.0
