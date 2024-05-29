@@ -1,6 +1,5 @@
 FROM mcr.microsoft.com/cbl-mariner/base/rust:1.72 as build
-COPY Cargo.toml ./
-COPY src/ ./
+COPY . $PWD
 RUN cargo build --release
 
 FROM mcr.microsoft.com/cbl-mariner/base/core:2.0
