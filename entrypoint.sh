@@ -51,7 +51,7 @@ if [[ "$RESULT" -eq 0 ]]; then
     # Success.
     rm -rf /mnt/actions/*
     echo "Completed successfully!"
-    exit 0
+    sleep infinity
 else
     echo "Failed during nsenter command execution"
     exit 1

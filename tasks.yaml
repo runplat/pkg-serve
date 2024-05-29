@@ -1,3 +1,5 @@
+# ACR Tasks Definition
+# Can be used to build and push to an acr registry
 version: v1.0.0
 steps:
   - build: -t {{.Run.Registry}}/pkg-serve:{{.Run.ID}} .
