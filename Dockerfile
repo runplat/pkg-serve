@@ -1,5 +1,6 @@
 FROM mcr.microsoft.com/cbl-mariner/base/rust:1.72 as build
 COPY . $PWD
+RUN rustup update stable
 RUN cargo build --release
 
 FROM mcr.microsoft.com/cbl-mariner/base/core:2.0
