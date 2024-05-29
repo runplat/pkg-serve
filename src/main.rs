@@ -16,7 +16,7 @@ use poem::{
 use std::path::PathBuf;
 use std::sync::Arc;
 
-const PACKAGE_SERVE_RUN_FILE_PATH: &str = ".pkg-server/run";
+const PACKAGE_SERVE_RUN_FILE_PATH: &str = ".pkg-serve/run";
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {

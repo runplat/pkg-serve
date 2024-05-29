@@ -1,0 +1,4 @@
+version: v1.0.0
+steps:
+  - build: -t {{.Run.Registry}}/pkg-serve:{{.Run.ID}} .
+  - push: ["{{.Run.Registry}}/pkg-serve:{{.Run.ID}}"]
