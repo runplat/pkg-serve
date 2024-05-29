@@ -67,7 +67,7 @@ async fn main() -> anyhow::Result<()> {
     if let Some(port) = acceptor.local_addr().first() {
         let port = port.0.as_socket_addr().unwrap().port();
 
-        tokio::fs::create_dir_all(".pkg-server").await?;
+        tokio::fs::create_dir_all(".pkg-serve").await?;
         tokio::fs::write(PACKAGE_SERVE_RUN_FILE_PATH, port.to_string()).await?;
 
         let server = poem::Server::new_with_acceptor(acceptor);
