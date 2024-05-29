@@ -1,6 +1,6 @@
 FROM mcr.microsoft.com/cbl-mariner/base/rust:1.72 as build
 COPY . $PWD
-RUN tdnf update & tdnf install pkgconfig openssl-devel
+RUN tdnf update -y & tdnf install pkgconfig openssl-devel -y
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 RUN rustup update
 RUN cargo build --release
