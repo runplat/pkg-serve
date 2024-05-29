@@ -24,6 +24,7 @@ fi
 
 echo "Starting package server"
 AZURE_STORAGE_ACCOUNT="${2}" ./pkg-serve &
+SERVER_PID=$!
 
 echo "Cleaning up stale actions"
 
@@ -33,29 +34,24 @@ echo "Copying fresh actions"
 
 cp -R /opt/actions/. /mnt/actions
 
-
-loops=0
-while ! test -f ".pkg-serve/run"; do
+while [[ ! -f /.pkg-serve/run ]]; do
     echo "Waiting for pkg-serve/run"
-    sleep 10
-    ((loops++))
-    if [[ loops -gt 60 ]]; then
-        echo 'Exceeded loop limit'
-        exit 1
-    fi
+    sleep 1s
 done
 
-port=$(cat .pkg-serve/run)
+port="$(cat .pkg-serve/run)"
 
 echo "Executing nsenter, pkg-sever listening on $port"
-nsenter -t 1 -m -- PKG_SERVE_RUN_PORT="${port}" bash "${ACTION_FILE}"
+PKG_SERVE_RUN_PORT="${port}" nsenter -t 1 -m -- bash "${ACTION_FILE}"
 RESULT="${PIPESTATUS[0]}"
 
-if [ "$RESULT" -eq 0 ]; then
+kill -s SIGINT "$SERVER_PID"
+
+if [[ "$RESULT" -eq 0 ]]; then
     # Success.
     rm -rf /mnt/actions/*
     echo "Completed successfully!"
-    sleep infinity
+    exit 0
 else
     echo "Failed during nsenter command execution"
     exit 1

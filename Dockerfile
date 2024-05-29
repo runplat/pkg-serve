@@ -8,7 +8,7 @@ RUN cargo build --release
 FROM mcr.microsoft.com/cbl-mariner/base/core:2.0
 COPY --from=build target/release/pkg-serve ./
 COPY entrypoint.sh entrypoint.sh
-RUN tdnf update -y & tdnf install ca-certificates -y
+RUN tdnf update -y & tdnf install ca-certificates util-linux wget systemd -y
 RUN chmod +x ./pkg-serve
 RUN chmod +x ./entrypoint.sh
 ENTRYPOINT [ "/entrypoint.sh" ]
