@@ -23,7 +23,7 @@ if [[ -z "${2}" ]]; then
 fi
 
 echo "Starting package server"
-STORAGE_ACCOUNT_NAME="${2}" ./pkg-serve &
+AZURE_STORAGE_ACCOUNT="${2}" ./pkg-serve &
 
 echo "Cleaning up stale actions"
 
