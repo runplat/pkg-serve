@@ -13,6 +13,36 @@ Currently, this project is focused on the Azure ecosystem to use with:
 
 However, it should be fairly straightforward to adopt to other clouds, as all of the code is fairly short.
 
+## Getting Started
+
+To get started, first you can use the provided `tasks.yaml` to build and push the pkg-serve image to your own ACR registry. By creating a task, you can keep pkg-serve
+image up to date with a source-trigger, or even just run it on demand with ACR Task's quick build feature.
+
+Next create a `pkg` container in the storage account of your choice, upload some blobs and create `packages.toml` file to configure the routes to serve.
+
+Finally, ensure you've assigned a role to your AKS Nodepool's kubelet identity to access both ACR and the Storage Account of your choice.
+
+Last but not least, create your config map and daemonset from the examples below, and run `kubectl apply` to execute the daemonset.
+
+## Configuring the pkg server
+
+All configuration is done within the storage account to re-use the provided tooling. When the server starts it will look for a container called `pkg`. And a blob called `packages.toml`.
+
+`packages.toml` lists available packages that can be served by the server by configuring the name of the package and a "tag" value.
+
+Here is an example file,
+
+```toml
+[mypackage.latest]
+path = 'mypackage-123456.deb'
+```
+
+The first table `mypackage` will be the name of the package being served. This table is a map of "tags" that each map to a blob path within the same container.
+For example, `latest` would be the tag name and `mypackage-123456.deb` is the name of the blob in the same container.
+
+Putting it all together, the path to download this blob during runtime would be `/pkg/mypackage/latest`. You can imagine building automation that updates this file
+within the build pipeline, or you could just manually maintain it from your own machine.
+
 ## Example Usage
 
 Suppose you have a project that produces debian packages which you wish to test before uploading that package to a central public
@@ -125,33 +155,3 @@ spec:
 
 The key entrypoint in the above DaemonSet definition is the line with `args: [ "install", "mystorageaccountname" ]`. The first argument `install` is the name of the config key
 in the ConfigMap. The second argument `mystorageaccountname`, is the name of the Azure Storage Account the Node's identity that has an assigned blob storage role.
-
-## Configuring the pkg server
-
-All configuration is done within the storage account to re-use the provided tooling. When the server starts it will look for a container called `pkg`. And a blob called `packages.toml`.
-
-`packages.toml` lists available packages that can be served by the server by configuring the name of the package and a "tag" value.
-
-Here is an example file,
-
-```toml
-[mypackage.latest]
-path = 'mypackage-123456.deb'
-```
-
-The first table `mypackage` will be the name of the package being served. This table is a map of "tags" that each map to a blob path within the same container.
-For example, `latest` would be the tag name and `mypackage-123456.deb` is the name of the blob in the same container.
-
-Putting it all together, the path to download this blob during runtime would be `/pkg/mypackage/latest`. You can imagine building automation that updates this file
-within the build pipeline, or you could just manually maintain it from your own machine.
-
-## Getting Started
-
-To get started, first you can use the provided `tasks.yaml` to build and push the pkg-serve image to your own ACR registry. By creating a task, you can keep pkg-serve
-image up to date with a source-trigger, or even just run it on demand with ACR Task's quick build feature.
-
-Next create a `pkg` container in the storage account of your choice, upload some blobs and create `packages.toml` file to configure the routes to serve.
-
-Finally, ensure you've assigned a role to your AKS Nodepool's kubelet identity to access both ACR and the Storage Account of your choice.
-
-Last but not least, create your config map and daemonset from the examples above, and run `kubectl apply` to execute the daemonset.
