@@ -11,7 +11,7 @@ Currently, this project is focused on the Azure ecosystem to use with:
 - ACR
 - Azure Storage Blobs
 
-However, it should be fairly straightforward to adopt to other clouds all of the code is fairly short.
+However, it should be fairly straightforward to adopt to other clouds, as all of the code is fairly short.
 
 ## Example Usage
 
